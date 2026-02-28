@@ -17,15 +17,19 @@ module tt_um_8bit_mac(
 )
 
     //registers - for simple use cases
-    reg[7:0] a_reg, b_reg; 
+    reg[7:0] a_reg
+    reg[7:0] b_reg; 
     reg[15:0] product; 
     reg[23:0] accum; 
     reg load_state; 
 
-    //Control signals 
-    wire load_en = uio_in[0]; 
-    wire [1:0] read_sel = uio_in[2:1];
-    wire clr_acc = uio_in[3]; 
+    //Control wires for signals - 
+    wire load_en;                 //enable
+    wire [1:0] read_sel;          //sel read pin
+    wire clr_acc;                 //clear 
+    wire signed [7:0] s_a;        //each signed pin in reg_a
+    wire signed [7:0] s_b;        //each signed pin in reg_b
+    wire signed [15:0] product_comb;    //16 bit reg to store output of baugh wooley product
 
     // Input loading
     always @(posedge clk) begin 
@@ -42,12 +46,13 @@ module tt_um_8bit_mac(
         end
     end
 
-    // Stage 1: baugh-wooley signed multiplication 
-    wire signed [7:0] s_a = a_reg;
-    wire signed [7:0] s_b = b_reg;
-    wire signed [15:0] product_comb = s_a * s_b; 
+  
+    // Stage 1: Baugh Wooley Signed Multiplication
+    assign s_a = a_reg;
+    assign s_b = b_reg;
+    assign product_comb = s_a * s_b; 
 
-    // Stage 2: Baugh Wooley Signed Multiplication
+    // Stage 2: Pipeline register
     always @(posedge clk) begin 
         if (!rst_n) 
             product <= 16'h0000;
@@ -64,6 +69,7 @@ module tt_um_8bit_mac(
             accum <= accum + {{8{product[15]}}, product};
     end
 
+    //Stage 4: output multiplexing
     assign uo_out = (read_sel == 2'b00) ? accum[7:0] : 
                     (read_sel == 2'b01) ? accum[15:8] : 
                     (read_sel == 2'b10) ? accum[23:16] : 8'h00;
