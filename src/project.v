@@ -17,7 +17,7 @@ module tt_um_8bit_mac(
 )
 
     //registers - for simple use cases
-    reg[7:0] a_reg
+    reg[7:0] a_reg;
     reg[7:0] b_reg; 
     reg[15:0] product; 
     reg[23:0] accum; 
