@@ -14,7 +14,7 @@ module tt_um_8bit_mac(
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
-)
+);
 
     //registers - for simple use cases
     reg[7:0] a_reg;
@@ -31,6 +31,10 @@ module tt_um_8bit_mac(
     wire signed [7:0] s_b;        //each signed pin in reg_b
     wire signed [15:0] product_comb;    //16 bit reg to store output of baugh wooley product
 
+    assign load_en = uio_in[0];
+    assign read_sel = uio_in[2:1];
+    assign clr_acc = uio_in[3];
+    
     // Input loading
     always @(posedge clk) begin 
         if (!rst_n) begin 
