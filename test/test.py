@@ -40,9 +40,16 @@ async def test_project(dut):
     # Keep testing the module by changing the input values, waiting for
     # one or more clock cycles, and asserting the expected output values.
 
+    # Make sure that Accumulator starts at absolute 0: 
+    dut.uio_in.value = 0x08 #clr_acc = uio[3]
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0x00 
+    await ClockCycles(dut.clk, 1)
+
     # TEST CASE: 10*5 = 50
     # LOAD A = 10
     dut.ui_in.value = 10
+    await cocotb.triggers.ReadOnly() #Wait for signal to stabilize
     dut.uio_in.value= 0x01          # Set load_en (uio[0]) high
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00        # Set load_en low 
