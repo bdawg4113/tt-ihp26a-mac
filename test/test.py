@@ -45,12 +45,12 @@ async def test_project(dut):
     dut.ui_in.value = 10
     dut.uio_in.value= 0x01          # Set load_en (uio[0]) high
     await ClockCycles(dut.clk, 1)
-    duit.uio_in.value = 0x00        # Set load_en low 
+    dut.uio_in.value = 0x00        # Set load_en low 
     await ClockCycles(dut.clk, 1)
 
     # LOAD B = 5: 
     dut.ui_in.value = 5
-    dut.uio_in_value = 0x01         # set load_en high 
+    dut.uio_in.value = 0x01         # set load_en high 
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00         # Set load_en high 
 
@@ -71,6 +71,7 @@ async def test_project(dut):
     dut.uio_in.value = 0x00 
     await ClockCycles(dut.clk, 1)
 
+    # Load B = 10 (0x0A)
     dut.ui_in.value= 10
     dut.uio_in.value = 0x01
     await ClockCycles(dut.clk, 1)
@@ -78,5 +79,6 @@ async def test_project(dut):
 
     await ClockCycles(dut.clk, 3)
 
-    assert dut.uo_out.value == 236
-    dut._log.info("Handled signed multiplication probably")
+    # Accumulator was not cleared, so 50 + (-20) = 30
+    assert dut.uo_out.value == 30
+    dut._log.info(f"Accumulated Result Check: {int(dut.uo_out.value)}")
