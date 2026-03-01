@@ -22,6 +22,7 @@ module tt_um_8bit_mac(
     reg[15:0] product; 
     reg signed [23:0] accum; 
     reg load_state; 
+    reg product_valid; 
 
     //Control wires for signals - 
     wire load_en;                 //enable
@@ -60,8 +61,11 @@ module tt_um_8bit_mac(
     always @(posedge clk) begin 
         if (!rst_n) 
             product <= 16'h0000;
+            //set product_valid to high: 
+            product_valid <= 1'b0; 
         else 
             product <= product_comb;
+            product_valid <= (load_en && load_state == 1'b1);
     end
 
     //Stage 3: 24-bit accumulator with sign extension + guard bits 
@@ -69,7 +73,7 @@ module tt_um_8bit_mac(
     always @(posedge clk) begin 
         if (!rst_n || clr_acc)
             accum <= 24'h000000;
-        else 
+        else if (product_valid)
             accum <= accum + {{8{product[15]}}, product};
     end
 
