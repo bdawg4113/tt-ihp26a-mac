@@ -59,13 +59,15 @@ module tt_um_8bit_mac(
 
     // Stage 2: Pipeline register
     always @(posedge clk) begin 
-        if (!rst_n) 
+        if (!rst_n) begin
             product <= 16'h0000;
             //set product_valid to high: 
             product_valid <= 1'b0; 
-        else 
+        end
+        else begin
             product <= product_comb;
             product_valid <= (load_en && load_state == 1'b1);
+        end
     end
 
     //Stage 3: 24-bit accumulator with sign extension + guard bits 
