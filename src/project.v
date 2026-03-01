@@ -20,7 +20,7 @@ module tt_um_8bit_mac(
     reg[7:0] a_reg;
     reg[7:0] b_reg; 
     reg[15:0] product; 
-    reg[23:0] accum; 
+    reg signed [23:0] accum; 
     reg load_state; 
 
     //Control wires for signals - 

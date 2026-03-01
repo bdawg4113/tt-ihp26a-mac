@@ -49,7 +49,7 @@ async def test_project(dut):
     # TEST CASE: 10*5 = 50
     # LOAD A = 10
     dut.ui_in.value = 10
-    await cocotb.triggers.ReadOnly() #Wait for signal to stabilize
+    # await cocotb.triggers.ReadOnly() #Wait for signal to stabilize
     dut.uio_in.value= 0x01          # Set load_en (uio[0]) high
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00        # Set load_en low 
