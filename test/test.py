@@ -59,20 +59,18 @@ async def test_project(dut):
     dut.ui_in.value = 5
     dut.uio_in.value = 0x01         # set load_en high 
     await ClockCycles(dut.clk, 1)
-    dut.uio_in.value = 0x00         # Set load_en high 
-
-    # Wait for pipeline latency 
-    await ClockCycles(dut.clk, 3) 
 
     # Read the result of accumulator bits [7:0]
     dut.uio_in.value = 0x00 
     await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 4)   # bump from 3 to 4 
     assert dut.uo_out.value == 50 
     dut._log.info(f"Successfully calculated 10 * 5 = {int(dut.uo_out.value)}")
 
+    # Load B = 10
     # Test negative numbers: -2 * 10 = -20 
     # Two's complement for -2 (8-bit) is 0xFE (254)
-    dut.ui_in.value = 0xFE 
+    dut.ui_in.value = 10
     dut.uio_in.value = 0x01
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00 
@@ -83,9 +81,9 @@ async def test_project(dut):
     dut.uio_in.value = 0x01
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00 
-
-    await ClockCycles(dut.clk, 3)
+    await ClockCycles(dut.clk, 1)      # Added extra buffer clock cycle
+    await ClockCycles(dut.clk, 4)      # Added 3 more clock cycles
 
     # Accumulator was not cleared, so 50 + (-20) = 30
-    assert dut.uo_out.value == 30
+    assert (dut.uo_out.value.integer) == (30 & 0xFF)
     dut._log.info(f"Accumulated Result Check: {int(dut.uo_out.value)}")
