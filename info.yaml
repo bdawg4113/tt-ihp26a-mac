@@ -23,24 +23,24 @@ project:
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: "load"
+  ui[0]: "load_en"
   ui[1]: "read_sel[0]"
   ui[2]: "read_sel[1]"
-  ui[3]: "clear"
+  ui[3]: "clr_acc"
   ui[4]: ""
   ui[5]: ""
   ui[6]: ""
   ui[7]: ""
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[0]: "Output byte 0"
+  uo[1]: "Output byte 1"
+  uo[2]: "Output byte 2"
+  uo[3]: "Output byte 3"
+  uo[4]: "Output byte 4"
+  uo[5]: "Output byte 5"
+  uo[6]: "Output byte 6"
+  uo[7]: "Output byte 7"
 
   # Bidirectional pins
   uio[0]: ""
