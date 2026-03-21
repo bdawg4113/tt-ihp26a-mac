@@ -23,6 +23,7 @@ module tt_um_8bit_mac(
     reg signed [23:0] accum; 
     reg load_state; 
     reg product_valid; 
+    reg b_loaded; //flag that captures whether or not "b was loaded last cycle"
 
     //Control wires for signals - 
     wire load_en;                 //enable
@@ -58,15 +59,18 @@ module tt_um_8bit_mac(
     assign product_comb = s_a * s_b; 
 
     // Stage 2: Pipeline register
+
     always @(posedge clk) begin 
         if (!rst_n) begin
             product <= 16'h0000;
+            b_loaded <= 1'b0;
             //set product_valid to high: 
             product_valid <= 1'b0; 
         end
         else begin
             product <= product_comb;
-            product_valid <= (load_en && load_state == 1'b1);
+            b_loaded <= (load_en && load_state == 1'b1);
+            product_valid <= b_loaded;
         end
     end
 

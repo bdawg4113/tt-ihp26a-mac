@@ -67,10 +67,10 @@ async def test_project(dut):
     assert dut.uo_out.value == 50 
     dut._log.info(f"Successfully calculated 10 * 5 = {int(dut.uo_out.value)}")
 
-    # Load B = 10
+    #Load A = -2
     # Test negative numbers: -2 * 10 = -20 
     # Two's complement for -2 (8-bit) is 0xFE (254)
-    dut.ui_in.value = 10
+    dut.ui_in.value = 0xFE
     dut.uio_in.value = 0x01
     await ClockCycles(dut.clk, 1)
     dut.uio_in.value = 0x00 
